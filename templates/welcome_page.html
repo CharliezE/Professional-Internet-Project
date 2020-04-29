@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="jumbotron hoverable p-4" style="background-color: #5ad65a;">
+        <div class="container">
+          <h1 class="display-4">Приветствуем вас в Cactus Life!</h1>
+          <p class="lead">Cactus Life является развлекательным порталом, не несущем особой смысловой нагрузки)</p>
+          <p class="lead">Желаем приятного времяпровождения!</p>
+        </div>
+    </div>
+
+    <div class="alert alert-danger text-body" role="alert">
+      <div class="row">
+        <div class="col-md-8">
+          <h1 class="h2 page-header" align="center">Новости</h1>
+            {% for new in news %}
+                <h3 class="h2 page-header" align="center">{{ new[0] }}</h3>
+                <p>{{ new[1] }}</p>
+            {% endfor %}
+        </div>
+         <div class="col-md-4">
+           <h4 class="page-header">Cupiditate non</h4>
+           <ul class="list-group">
+             <a href="#" class="list-group-item list-group-item-success">Ut labore et quasi architecto beatae vitae dicta sunt explicabo. Non numquam eius modi tempora incidunt, ut aliquid.</a>
+             <a href="#" class="list-group-item list-group-item-success">Ut labore et quasi architecto beatae vitae dicta sunt explicabo. Non numquam eius modi tempora incidunt, ut aliquid.</a>
+             <a href="#" class="list-group-item list-group-item-success">Ut labore et quasi architecto beatae vitae dicta sunt explicabo. Non numquam eius modi tempora incidunt, ut aliquid.</a>
+
+           </ul>
+           <h4 class="page-header">Cupiditate non</h4>
+           <ul class="list-group">
+             <a href="#" class="list-group-item list-group-item-success">Ut labore et quasi architecto beatae vitae dicta sunt explicabo. Non numquam eius modi tempora incidunt, ut aliquid.</a>
+             <a href="#" class="list-group-item list-group-item-success">Ut labore et quasi architecto beatae vitae dicta sunt explicabo. Non numquam eius modi tempora incidunt, ut aliquid.</a>
+             <a href="#" class="list-group-item list-group-item-success">Ut labore et quasi architecto beatae vitae dicta sunt explicabo. Non numquam eius modi tempora incidunt, ut aliquid.</a>
+
+           </ul>
+           <h4 class="page-header">Cupiditate non</h4>
+           <ul class="list-group">
+             <a href="#" class="list-group-item list-group-item-success">Ut labore et quasi architecto beatae vitae dicta sunt explicabo. Non numquam eius modi tempora incidunt, ut aliquid.</a>
+             <a href="#" class="list-group-item list-group-item-success">Ut labore et quasi architecto beatae vitae dicta sunt explicabo. Non numquam eius modi tempora incidunt, ut aliquid.</a>
+             <a href="#" class="list-group-item list-group-item-success">Ut labore et quasi architecto beatae vitae dicta sunt explicabo. Non numquam eius modi tempora incidunt, ut aliquid.</a>
+
+           </ul>
+
+
+
+
+    </div>
+    </div>
+    </div>
+{% endblock %}

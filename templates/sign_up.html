@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" align="center">
+<div class="alert alert-success col-md-6 col-md-offset-6" role="alert">
+    <h1 align="center">Кактусоризация</h1>
+    <form>
+      <div class="form-group row" align="left">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-10">
+          <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+        </div>
+      </div>
+      <div class="form-group row" align="left">
+        <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+        </div>
+      </div>
+      <fieldset class="form-group">
+        <div class="row" align="left">
+          <legend class="col-form-label col-sm-2 pt-0">Пол</legend>
+          <div class="col-sm-10">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+              <label class="form-check-label" for="gridRadios1">
+                Мужской
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+              <label class="form-check-label" for="gridRadios2">
+                Женский
+              </label>
+            </div>
+            <div class="form-check disabled">
+              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3">
+              <label class="form-check-label" for="gridRadios3">
+                Никакой
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <div class="form-group row" align="left">
+        <div class="col-sm-2">Галочка</div>
+        <div class="col-sm-10">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gridCheck1">
+            <label class="form-check-label" for="gridCheck1">
+              Просто прикольно же
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row" align="center">
+        <div class="col-sm-10">
+          <button type="submit" class="btn btn-success">Sign up</button>
+        </div>
+      </div>
+    </form>
+</div>
+</div>
+{% endblock %}
