@@ -3,7 +3,7 @@ import requests
 import datetime
 
 from wtforms import FileField, SubmitField, StringField, PasswordField, BooleanField
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect, request
 from wtforms.validators import DataRequired
 #from .db_session import SqlAlchemyBase
 from flask_wtf import FlaskForm
@@ -17,6 +17,10 @@ from data.users import User
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 param = []
+activated = False
+
+player = None
+
 
 
 class AvatarForm(FlaskForm):
@@ -50,10 +54,7 @@ def translation(text):
     except Exception:
         return 'No'
 
-
-@app.route('/')
-@app.route('/index')
-def index():
+def welcome():
     url_new = f'http://newsapi.org/v2/top-headlines?country=us&category=business&apiKey={API_KEY_NEWS}'
     url_new_1 = f'http://newsapi.org/v2/everything?q=apple&from=2020-04-23&to=2020-04-25&sortBy=popularity&apiKe={API_KEY_NEWS}'
     response = requests.get(url_new)
@@ -79,36 +80,78 @@ def index():
                     text = translation(text)
                     if text != 'No':
                         news.append((translation(title), text))
-        return render_template('welcome_page.html', news=news)
+        return news
     else:
-        return render_template('welcome_page.html', stroka=f"Ошибка выполнения запроса")
+        return [("Ошибка выполнения запроса", "упс")]
 
 
+news = welcome()
 
-@app.route('/avatar', methods=['GET', 'POST'])
-def avatar():
-    form = AvatarForm()
-    if form.validate_on_submit():
-        avatar_path = f'static/img/ava_{form.file.data.filename}'
-        form.file.data.save(avatar_path)
-        return render_template('avatar.html', form=form, avatar=avatar_path)
-    return render_template('avatar.html', form=form)
+
+@app.route('/')
+@app.route('/index')
+def index():
+    return render_template('welcome_page.html', news=news)
 
 
 @app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
-    form = LoginForm()
-    if form.validate_on_submit():
-        return redirect('/success')
-    return render_template('sign_up.html', title='Кактусоризация', form=form)
+    global activated, have, player
+    if request.method == 'GET':
+        return render_template('sign_up.html')
+    elif request.method == 'POST':
+        try:
+            user = User()
+            user.email = request.form['email']
+            user.password = request.form['password']
+            user.sex = request.form['sex']
+            session = db_session.create_session()
+            session.add(user)
+            have_now = len([user.id for user in session.query(User)])
+            if have + 1 == have_now:
+                have += 1
+                player = user
+                activated = True
+                session.commit()
+                return render_template('welcome_page_2.html', news=news)
+            session.commit()
+            return render_template('sign_up.html')
+        except Exception as e:
+            return e
 
 
 @app.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
-    form = LoginForm()
-    if form.validate_on_submit():
-        return redirect('/success')
-    return render_template('sign_in.html', title='Кактусоризация', form=form)
+    global activated, player
+    if request.method == 'GET':
+        return render_template('sign_ip.html')
+    elif request.method == 'POST':
+        try:
+            em = request.form['email']
+            p = request.form['password']
+            session = db_session.create_session()
+            for user in session.query(User):
+                if user.email == em:
+                    if user.password == p:
+                        activated = True
+                        player = user
+                        session.commit()
+                        return render_template('welcome_page_2.html', news=news)
+            session.commit()
+            return render_template('sign_ip.html')
+        except Exception as e:
+            return e
+
+
+@app.route('/account', methods=['GET', 'POST'])
+def account():
+    form = AvatarForm()
+    if player.img is None:
+        if form.validate_on_submit():
+            avatar_path = f'static/img/ava_{form.file.data.filename}'
+            form.file.data.save(avatar_path)
+            return render_template('account.html', user=player, f=False, form=form, avatar=avatar_path)
+    return render_template('account.html', user=player, f=True, form=form)
 
 
 @app.route('/slides', methods=['GET', 'POST'])
@@ -140,6 +183,9 @@ def loading():
 if __name__ == '__main__':
     db_session.global_init("db/users.sqlite")
     app.run(port=8080, host='127.0.0.1')
+    session = db_session.create_session()
+    have = len([user.id for user in session.query(User)])
+    session.commit()
 
 
 #<a href="sign_up" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Sign in</a>

@@ -1,0 +1,23 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<div class="jumbotron hoverable p-4" style="background-color: #5ad65a;">
+    <div class="container">
+        <h1 class="display-4" align="center">Ваша страничка</h1>
+    </div>
+</div>
+<div class="alert alert-success" role="alert">
+    {% if f %}
+        <img src="{{ user.img }}" class="rounded-circle" alt="Cinque Terre" width="304" height="236">
+    {% else %}
+        <h4>Выберите фотографию</h4>
+        <h6>усли хотите, конечно</h6>
+        <form action="" method="post" enctype="multipart/form-data" novalidate>
+            {{ form.csrf_token }}
+            <p>{{ form.file(type="file", class="form-control-file") }} </p>
+            <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    {% endif %}
+    <h2 class="display-4" align="center">Здесь не на что смотреть...🏜</h2>
+    <h3 class="display-4" align="center">💖Но вы всё равно прекрасны!💖</h3>
+</div>
+{% endblock %}
