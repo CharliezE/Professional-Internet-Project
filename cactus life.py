@@ -106,19 +106,21 @@ def sign_up():
         return render_template('sign_up.html')
     elif request.method == 'POST':
         try:
-            user = User()
-            user.email = request.form['email']
-            user.password = request.form['password']
-            user.sex = request.form['sex']
-            session = db_session.create_session()
-            have = len([user.id for user in session.query(User)])
-            session.add(user)
-            have_now = len([user.id for user in session.query(User)])
-            if have + 1 == have_now:
-                player = user
+            p = request.form['password']
+            if len(''.join(p.split())) > 8 and ' ' not in p:
+                user = User()
+                user.email = request.form['email']
+                user.password = p
+                user.sex = request.form['sex']
+                session = db_session.create_session()
+                have = len([user.id for user in session.query(User)])
+                session.add(user)
+                have_now = len([user.id for user in session.query(User)])
+                if have + 1 == have_now:
+                    player = user
+                    session.commit()
+                    return render_template('welcome_page_2.html', news=news)
                 session.commit()
-                return render_template('welcome_page_2.html', news=news)
-            session.commit()
             return render_template('not_sign_up.html')
         except Exception as e:
             print(e)
