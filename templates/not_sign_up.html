@@ -1,137 +1,68 @@
-{% if a %}
-  {% extends "base1.html" %}
+{% extends "base.html" %}
 
-  {% block content %}
-  <div class="container" align="center">
-    <div class="alert alert-success col-md-6 col-md-offset-6" role="alert">
-      <h1 align="center">Кактусоризация</h1>
-        <div class="alert alert-danger" role="alert">
-          Такой пользователь уже есть. Возьмите другую почту.
-        </div>
-      <form class="login_form" method="post">
-        <div class="form-group row" align="left">
-          <label for="email" class="col-sm-2 col-form-label">Email</label>
-          <div class="col-sm-10">
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
-                   placeholder="Введите адрес почты"
-                   name="email">
-          </div>
-        </div>
-        <div class="form-group row" align="left">
-          <label for="password" class="col-sm-2 col-form-label">Password</label>
-          <div class="col-sm-10">
-            <input type="password" class="form-control" id="password" placeholder="Введите пароль" name="password">
-          </div>
-        </div>
-        <div class="row" align="left">
-          <legend class="col-form-label col-sm-2 pt-0">Пол</legend>
-          <div class="col-sm-10">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="sex" id="male" value="male" checked>
-              <label class="form-check-label" for="male">
-                Мужской
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="sex" id="female" value="female">
-              <label class="form-check-label" for="female">
-                Женский
-              </label>
-            </div>
-            <div class="form-check disabled">
-              <input class="form-check-input" type="radio" name="sex" id="nobody" value="nobody">
-              <label class="form-check-label" for="nobody">
-                Никакой
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="form-group row" align="left">
-          <div class="col-sm-2">Галочка</div>
-          <div class="col-sm-10">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="gridCheck1">
-              <label class="form-check-label" for="gridCheck1">
-                Давай, сделай это
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="form-group row" align="center">
-          <div class="col-sm-10">
-            <button type="submit" class="btn btn-success">Sign up</button>
-          </div>
-        </div>
-      </form>
+{% block content %}
+<div class="container" align="center">
+  <div class="alert alert-success col-md-6 col-md-offset-6" role="alert">
+    <h1 align="center">Кактусоризация</h1>
+    <div class="alert alert-danger" role="alert">
+      Такой пользователь уже есть. Возьмите другую почту.
     </div>
+    <form class="login_form" method="post">
+      <div class="form-group row" align="left">
+        <label for="email" class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-10">
+          <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                 placeholder="Введите адрес почты"
+                 name="email">
+        </div>
+      </div>
+      <div class="form-group row" align="left">
+        <label for="password" class="col-sm-2 col-form-label">Пароль</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="password" placeholder="Введите пароль"
+                 name="password">
+        </div>
+      </div>
+      <div class="row" align="left">
+        <legend class="col-form-label col-sm-2 pt-0">Пол</legend>
+        <div class="col-sm-10">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="sex" id="male" value="male" checked>
+            <label class="form-check-label" for="male">
+              Мужской
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="sex" id="female" value="female">
+            <label class="form-check-label" for="female">
+              Женский
+            </label>
+          </div>
+          <div class="form-check disabled">
+            <input class="form-check-input" type="radio" name="sex" id="nobody" value="nobody">
+            <label class="form-check-label" for="nobody">
+              Никакой
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row" align="left">
+        <div class="col-sm-2">Галочка</div>
+        <div class="col-sm-10">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gridCheck1">
+            <label class="form-check-label" for="gridCheck1">
+              Давай, сделай это
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row" align="center">
+        <div class="col-sm-10">
+          <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+        </div>
+      </div>
+    </form>
   </div>
-  {% endblock %}
-{% else %}
-  {% extends "base1.html" %}
-
-  {% block content %}
-  <div class="container" align="center">
-    <div class="alert alert-success col-md-6 col-md-offset-6" role="alert">
-      <h1 align="center">Кактусоризация</h1>
-        <div class="alert alert-danger" role="alert">
-          Такой пользователь уже есть. Возьмите другую почту.
-        </div>
-      <form class="login_form" method="post">
-        <div class="form-group row" align="left">
-          <label for="email" class="col-sm-2 col-form-label">Email</label>
-          <div class="col-sm-10">
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
-                   placeholder="Введите адрес почты"
-                   name="email">
-          </div>
-        </div>
-        <div class="form-group row" align="left">
-          <label for="password" class="col-sm-2 col-form-label">Password</label>
-          <div class="col-sm-10">
-            <input type="password" class="form-control" id="password" placeholder="Введите пароль" name="password">
-          </div>
-        </div>
-        <div class="row" align="left">
-          <legend class="col-form-label col-sm-2 pt-0">Пол</legend>
-          <div class="col-sm-10">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="sex" id="male" value="male" checked>
-              <label class="form-check-label" for="male">
-                Мужской
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="sex" id="female" value="female">
-              <label class="form-check-label" for="female">
-                Женский
-              </label>
-            </div>
-            <div class="form-check disabled">
-              <input class="form-check-input" type="radio" name="sex" id="nobody" value="nobody">
-              <label class="form-check-label" for="nobody">
-                Никакой
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="form-group row" align="left">
-          <div class="col-sm-2">Галочка</div>
-          <div class="col-sm-10">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="gridCheck1">
-              <label class="form-check-label" for="gridCheck1">
-                Давай, сделай это
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="form-group row" align="center">
-          <div class="col-sm-10">
-            <button type="submit" class="btn btn-success">Sign up</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-  {% endblock %}
-{% endif %}
+</div>
+{% endblock %}

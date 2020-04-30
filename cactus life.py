@@ -94,9 +94,14 @@ def index():
     return render_template('welcome_page.html', news=news)
 
 
+@app.route('/indexing')
+def indexing():
+    return render_template('welcome_page_2.html', news=news)
+
+
 @app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
-    global activated, have, player
+    global activated, player, news
     if request.method == 'GET':
         return render_template('sign_up.html')
     elif request.method == 'POST':
@@ -106,25 +111,24 @@ def sign_up():
             user.password = request.form['password']
             user.sex = request.form['sex']
             session = db_session.create_session()
+            have = len([user.id for user in session.query(User)])
             session.add(user)
             have_now = len([user.id for user in session.query(User)])
             if have + 1 == have_now:
-                have += 1
                 player = user
-                activated = True
                 session.commit()
                 return render_template('welcome_page_2.html', news=news)
             session.commit()
-            return render_template('sign_up.html')
+            return render_template('not_sign_up.html')
         except Exception as e:
-            return e
+            print(e)
 
 
 @app.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
-    global activated, player
+    global activated, player, news
     if request.method == 'GET':
-        return render_template('sign_ip.html')
+        return render_template('sign_in.html')
     elif request.method == 'POST':
         try:
             em = request.form['email']
@@ -133,25 +137,38 @@ def sign_in():
             for user in session.query(User):
                 if user.email == em:
                     if user.password == p:
-                        activated = True
                         player = user
                         session.commit()
                         return render_template('welcome_page_2.html', news=news)
             session.commit()
-            return render_template('sign_ip.html')
+            return render_template('not_sign_in.html')
         except Exception as e:
-            return e
+            print(e)
 
 
 @app.route('/account', methods=['GET', 'POST'])
 def account():
+    global player
     form = AvatarForm()
-    if player.img is None:
-        if form.validate_on_submit():
-            avatar_path = f'static/img/ava_{form.file.data.filename}'
-            form.file.data.save(avatar_path)
+    if form.validate_on_submit():
+        avatar_path = f'static/img/ava_{form.file.data.filename}'
+        form.file.data.save(avatar_path)
+        session = db_session.create_session()
+        for user in session.query(User):
+            if user.email == player.email and user.password == player.password:
+                user.img = avatar_path
+                player = user
+                break
+        session.commit()
+        if player.img is None:
             return render_template('account.html', user=player, f=False, form=form, avatar=avatar_path)
-    return render_template('account.html', user=player, f=True, form=form)
+        else:
+            return render_template('account.html', user=player, f=True, form=form)
+    else:
+        if player.img is None:
+            return render_template('account.html', user=player, f=False, form=form)
+        else:
+            return render_template('account.html', user=player, f=True, form=form)
 
 
 @app.route('/slides', methods=['GET', 'POST'])
@@ -183,9 +200,6 @@ def loading():
 if __name__ == '__main__':
     db_session.global_init("db/users.sqlite")
     app.run(port=8080, host='127.0.0.1')
-    session = db_session.create_session()
-    have = len([user.id for user in session.query(User)])
-    session.commit()
 
 
 #<a href="sign_up" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Sign in</a>
