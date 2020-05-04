@@ -1,8 +1,7 @@
 import apiai
 import json
 
-SMALL_TALK__TOKEN = "b9a3d18a3b424574aae740c634dc22a5"
-TRANSLATE_TOKEN = "76bf72f4c5354992b9edbf8a02f5b165"
+from config import SMALL_TALK__TOKEN, TRANSLATE_TOKEN
 
 
 class UserMessage:
