@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron hoverable p-4" style="background-color: #5ad65a;">
+    <div class="container">
+        <h1 class="display-4">Приветствуем вас в Cactus Life!</h1>
+        <p class="lead">Cactus Life является развлекательным порталом, не несущем особой смысловой нагрузки)</p>
+        <p class="lead">Желаем приятного времяпровождения!</p>
+    </div>
+</div>
+<div class="alert alert-danger text-body" role="alert">
+    <div class="row">
+        <div class="col-md-8">
+            <h3>
+                Chat with Cactus
+            </h3>
+            <form action="/bot" method="post">
+                <div class="form-group row" align="left">
+                <label for="ask" class="col-sm-1 col-form-label">You:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="ask"
+                               placeholder="Пообщаемся?"
+                               name="ask">
+                        <button type="submit" class="btn btn-success">Send</button>
+                    </div>
+                </div>
+            </form>
+                <div class="form-group row" align="left">
+                <label for="answer" class="col-sm-1 col-form-label">Cactus:</label>
+                    <div class="col-sm-10">
+                        <output class="form-control" id="answer" name="answer">{{ answer }}</output>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

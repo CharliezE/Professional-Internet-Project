@@ -9,6 +9,8 @@ from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
 from bs4 import BeautifulSoup
 
+from bot import ask_bot
+
 from config import API_KEY_NEWS, YANDEX_API, MY_KEY
 from data import db_session
 from data.users import User
@@ -44,6 +46,7 @@ def get_text(url):
     except Exception:
         return 'No'
 
+
 def translation(text):
     try:
         url = 'https://translate.yandex.net/api/v1.5/tr.json/translate?'
@@ -53,6 +56,7 @@ def translation(text):
         return r['text'][0]
     except Exception:
         return 'No'
+
 
 def welcome():
     url_new = f'http://newsapi.org/v2/top-headlines?country=us&category=business&apiKey={API_KEY_NEWS}'
@@ -197,6 +201,20 @@ def loading():
         form.file.data.save(avatar_path)
         return render_template('load.html', form=form, p=param)
     return render_template('load.html', form=form)
+
+
+@app.route("/bot", methods=["GET", "POST"])
+def bot():
+    if request.method == "GET":
+        return render_template('bot.html', answer="")
+    elif request.method == "POST":
+        try:
+            ask = request.form['ask']
+            answer = ask_bot(ask)
+            return render_template('bot.html', answer=answer)
+        except Exception as e:
+            print(e)
+    return
 
 
 if __name__ == '__main__':
