@@ -54,6 +54,15 @@ def translation(text):
     except Exception:
         return 'No'
 
+def check(e, p):
+    em = e.split('@')[1]
+    if e.count('@') == 1 and len(em[0]) > 0 and em.count('.') == 1:
+        eml = em.split('.')
+        if len(eml[0]) > 0 and len(eml[1]) > 0:
+            if len(''.join(p.split())) > 8 and ' ' not in p:
+                return True
+    return False
+
 def welcome():
     url_new = f'http://newsapi.org/v2/top-headlines?country=us&category=business&apiKey={API_KEY_NEWS}'
     url_new_1 = f'http://newsapi.org/v2/everything?q=apple&from=2020-04-23&to=2020-04-25&sortBy=popularity&apiKe={API_KEY_NEWS}'
@@ -106,10 +115,11 @@ def sign_up():
         return render_template('sign_up.html')
     elif request.method == 'POST':
         try:
+            em = request.form['email']
             p = request.form['password']
-            if len(''.join(p.split())) > 8 and ' ' not in p:
+            if check(em, p):
                 user = User()
-                user.email = request.form['email']
+                user.email = em
                 user.password = p
                 user.sex = request.form['sex']
                 session = db_session.create_session()
@@ -171,6 +181,13 @@ def account():
             return render_template('account.html', user=player, f=False, form=form)
         else:
             return render_template('account.html', user=player, f=True, form=form)
+
+
+@app.route('/exit', methods=['GET', 'POST'])
+def exit():
+    global player
+    player = None
+    return render_template('welcome_page.html', news=news)
 
 
 @app.route('/slides', methods=['GET', 'POST'])
