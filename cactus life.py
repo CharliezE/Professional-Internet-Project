@@ -190,37 +190,6 @@ def exit():
     return render_template('welcome_page.html', news=news)
 
 
-@app.route('/slides', methods=['GET', 'POST'])
-def slides():
-    param = {}
-    param['slide1'] = url_for('static', filename='img/8.jpg')
-    param['slide2'] = url_for('static', filename='img/1.jpg')
-    param['slide3'] = url_for('static', filename='img/2.jpg')
-    param['slide4'] = url_for('static', filename='img/3.jpg')
-    param['slide5'] = url_for('static', filename='img/4.jpg')
-    param['slide6'] = url_for('static', filename='img/5.jpg')
-    param['slide7'] = url_for('static', filename='img/6.jpg')
-    param['slide8'] = url_for('static', filename='img/7.jpg')
-    return render_template('slides.html', **param)
-
-
-@app.route('/loading', methods=['GET', 'POST'])
-def loading():
-    global param
-    form = AvatarForm()
-    if form.validate_on_submit():
-        avatar_path = f'static/img/ava_{form.file.data.filename}'
-        param.append(url_for('static', filename=f"img/ava_{form.file.data.filename}"))
-        form.file.data.save(avatar_path)
-        return render_template('load.html', form=form, p=param)
-    return render_template('load.html', form=form)
-
-
 if __name__ == '__main__':
     db_session.global_init("db/users.sqlite")
     app.run(port=8080, host='127.0.0.1')
-
-
-#<a href="sign_up" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Sign in</a>
-#    <h1>♥</h1>
-#    <a href="sign_up" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Sign up</a>
