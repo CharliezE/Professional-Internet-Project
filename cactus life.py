@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 
 from bot import ask_bot
 
-from config import API_KEY_NEWS, YANDEX_API, MY_KEY
+from config import API_KEY_NEWS, YANDEX_API, MY_KEY, MUSIC_KEY
 from data import db_session
 from data.users import User
 
@@ -116,7 +116,7 @@ def indexing():
 
 @app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
-    global activated, player, news, bot_dialog
+    global activated, player, news
     if request.method == 'GET':
         return render_template('sign_up.html')
     elif request.method == 'POST':
@@ -134,7 +134,6 @@ def sign_up():
                 have_now = len([user.id for user in session.query(User)])
                 if have + 1 == have_now:
                     player = user
-                    bot_dialog = []
                     session.commit()
                     return render_template('welcome_page_2.html', news=news)
                 session.commit()
@@ -192,8 +191,9 @@ def account():
 
 @app.route('/exit', methods=['GET', 'POST'])
 def exit():
-    global player
+    global player, bot_dialog
     player = None
+    bot_dialog = []
     return render_template('welcome_page.html', news=news)
 
 
@@ -217,6 +217,11 @@ def bot():
             print(e)
     return render_template('bot.html', answer="")
 
+
+@app.route("/music", methods=["GET", "POST"])
+def music():
+    url = f'https://api.jamendo.com/v3.0/playlists/tracks/?client_id={MUSIC_KEY}&format=json'
+    return
 
 if __name__ == '__main__':
     db_session.global_init("db/users.sqlite")
