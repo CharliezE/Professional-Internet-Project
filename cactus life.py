@@ -1,6 +1,6 @@
 import sqlalchemy
 import requests
-import datetime
+from datetime import datetime
 
 from wtforms import FileField, SubmitField, StringField, PasswordField, BooleanField
 from flask import Flask, render_template, url_for, redirect, request
@@ -22,6 +22,7 @@ param = []
 activated = False
 
 player = None
+bot_dialog = []
 
 
 
@@ -115,7 +116,7 @@ def indexing():
 
 @app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
-    global activated, player, news
+    global activated, player, news, bot_dialog
     if request.method == 'GET':
         return render_template('sign_up.html')
     elif request.method == 'POST':
@@ -133,6 +134,7 @@ def sign_up():
                 have_now = len([user.id for user in session.query(User)])
                 if have + 1 == have_now:
                     player = user
+                    bot_dialog = []
                     session.commit()
                     return render_template('welcome_page_2.html', news=news)
                 session.commit()
@@ -197,16 +199,23 @@ def exit():
 
 @app.route("/bot", methods=["GET", "POST"])
 def bot():
+    global bot_dialog
     if request.method == "GET":
-        return render_template('bot.html', answer="")
+        name = player.email.split('@')[0]
+        return render_template('bot.html', dlg=bot_dialog[::-1], name=name)
     elif request.method == "POST":
         try:
+            t = str(datetime.today()).split()
+            time = t[1][:-10] + ' ' + '.'.join(t[0].split('-')[::-1])
             ask = request.form['ask']
             answer = ask_bot(ask)
-            return render_template('bot.html', answer=answer)
+            name = player.email.split('@')[0]
+            bot_dialog.append((True, ask, time))
+            bot_dialog.append((False, answer, time))
+            return render_template('bot.html', dlg=bot_dialog[::-1], name=name, time=time)
         except Exception as e:
             print(e)
-    return
+    return render_template('bot.html', answer="")
 
 
 if __name__ == '__main__':

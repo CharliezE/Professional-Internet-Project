@@ -13,6 +13,7 @@ class User(SqlAlchemyBase):
     email = sqlalchemy.Column(sqlalchemy.String,
                               index=True, unique=True, nullable=True)
     password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     sex = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     img = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,

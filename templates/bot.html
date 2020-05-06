@@ -1,38 +1,61 @@
-{% extends "base.html" %}
+{% extends "base1.html" %}
 
 {% block content %}
 <div class="jumbotron hoverable p-4" style="background-color: #5ad65a;">
     <div class="container">
-        <h1 class="display-4">Приветствуем вас в Cactus Life!</h1>
-        <p class="lead">Cactus Life является развлекательным порталом, не несущем особой смысловой нагрузки)</p>
-        <p class="lead">Желаем приятного времяпровождения!</p>
+        <h1 class="display-4" align="center">Привет, я Манси🌵! Поговорим?</h1>
     </div>
 </div>
-<div class="alert alert-danger text-body" role="alert">
+<div class="alert alert-success text-body" role="alert">
     <div class="row">
         <div class="col-md-8">
-            <h3>
-                Chat with Cactus
-            </h3>
             <form action="/bot" method="post">
-                <div class="form-group row" align="left">
-                <label for="ask" class="col-sm-1 col-form-label">You:</label>
+                <div class="form-group row" align="center">
+                    <label for="ask" class="col-sm-1 col-form-label">Вы:</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="ask"
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="ask"
                                placeholder="Пообщаемся?"
                                name="ask">
-                        <button type="submit" class="btn btn-success">Send</button>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-success">Отправить</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
-                <div class="form-group row" align="left">
-                <label for="answer" class="col-sm-1 col-form-label">Cactus:</label>
-                    <div class="col-sm-10">
-                        <output class="form-control" id="answer" name="answer">{{ answer }}</output>
-                    </div>
-                </div>
-
         </div>
     </div>
+
+{% for user in dlg %}
+{% if user[0] %}
+<div class="container" align="right">
+    <div class="card col-md-6 col-md-offset-3" align="right">
+        <div class="card-header">
+            {{ name }}
+        </div>
+        <div class="card-body">
+            <blockquote class="blockquote mb-0">
+                <p>{{ user[1] }}</p>
+                <footer class="blockquote-footer">{{ user[2] }}</footer>
+            </blockquote>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card col-md-6 col-md-offset-3" style="background-color: #5ad65a;" align="left">
+    <div class="card-header">
+        Кактус Манси
+    </div>
+    <div class="card-body">
+        <blockquote class="blockquote mb-0">
+            <p>{{ user[1] }}</p>
+            <footer class="blockquote-footer">{{ user[2] }}</footer>
+        </blockquote>
+    </div>
+</div>
+
+{% endif %}
+{% endfor %}
 </div>
 {% endblock %}
