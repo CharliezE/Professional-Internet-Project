@@ -7,7 +7,7 @@ from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
 from bs4 import BeautifulSoup
 
-from bot import ask_bot
+from bot import ask_bot, translate_bot
 
 from config import API_KEY_NEWS, YANDEX_API, MY_KEY, MUSIC_KEY
 from data import db_session
@@ -229,6 +229,24 @@ def bot():
         except Exception as e:
             print(e)
     return render_template('bot.html', answer="")
+
+
+@app.route("/translate", methods=["GET", "POST"])
+def translate():
+    if request.method == "GET":
+        return render_template('translator.html', answer_translate=" ")
+    elif request.method == "POST":
+        try:
+            ask = request.form['ask']
+            lang1 = request.form['lang']
+            lang2 = request.form['lang1']
+            lang = f"{lang1}-{lang2}"
+            if ask:
+                answer = translate_bot(ask, lang)
+                return render_template('translator.html', answer_translate=answer)
+        except Exception as e:
+            print(e)
+            return
 
 
 @app.route("/music_instrumental", methods=["GET", "POST"])
