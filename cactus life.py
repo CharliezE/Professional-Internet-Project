@@ -1,11 +1,9 @@
-import sqlalchemy
 import requests
 from datetime import datetime
 
 from wtforms import FileField, SubmitField, StringField, PasswordField, BooleanField
 from flask import Flask, render_template, url_for, redirect, request
 from wtforms.validators import DataRequired
-#from .db_session import SqlAlchemyBase
 from flask_wtf import FlaskForm
 from bs4 import BeautifulSoup
 
@@ -18,8 +16,7 @@ from data.users import User
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
-param = []
-activated = False
+GENRE = ['Instrumental', 'Classical', 'Electronic', 'Latin', 'Hip hop', 'Country', 'Metal', 'Reggae', 'Blues', 'Folk', 'Jazz', 'Pop', 'Rock', 'Ska']
 
 player = None
 bot_dialog = []
@@ -100,6 +97,22 @@ def welcome():
         return [("Ошибка выполнения запроса", "упс")]
 
 
+def get_music(genre):
+    url_new = f'https://api.jamendo.com/v3.0/playlists/tracks/?client_id={MUSIC_KEY}&format=jsonpretty&limit=50&name={genre}&track_type=albumtrack'
+    response = requests.get(url_new)
+    all_music = []
+    if response:
+        json_response = response.json()
+        for x in json_response["results"]:
+            for y in x['tracks']:
+                artist = y['artist_name']
+                title = y['name']
+                img = y['image'].replace('\/', '/')
+                song = y['audio'].replace('\/', '/')
+                all_music.append((artist, title, img, song))
+    return all_music
+
+
 news = welcome()
 
 
@@ -116,7 +129,7 @@ def indexing():
 
 @app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
-    global activated, player, news
+    global player, news
     if request.method == 'GET':
         return render_template('sign_up.html')
     elif request.method == 'POST':
@@ -144,7 +157,7 @@ def sign_up():
 
 @app.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
-    global activated, player, news
+    global player, news
     if request.method == 'GET':
         return render_template('sign_in.html')
     elif request.method == 'POST':
@@ -179,14 +192,14 @@ def account():
                 break
         session.commit()
         if player.img is None:
-            return render_template('account.html', user=player, f=False, form=form, avatar=avatar_path)
+            return render_template('account.html', user=player, f=False, form=form, avatar=avatar_path, name=player.email.split('@')[0])
         else:
-            return render_template('account.html', user=player, f=True, form=form)
+            return render_template('account.html', user=player, f=True, form=form, name=player.email.split('@')[0])
     else:
         if player.img is None:
-            return render_template('account.html', user=player, f=False, form=form)
+            return render_template('account.html', user=player, f=False, form=form, name=player.email.split('@')[0])
         else:
-            return render_template('account.html', user=player, f=True, form=form)
+            return render_template('account.html', user=player, f=True, form=form, name=player.email.split('@')[0])
 
 
 @app.route('/exit', methods=['GET', 'POST'])
@@ -218,10 +231,88 @@ def bot():
     return render_template('bot.html', answer="")
 
 
-@app.route("/music", methods=["GET", "POST"])
-def music():
-    url = f'https://api.jamendo.com/v3.0/playlists/tracks/?client_id={MUSIC_KEY}&format=json'
-    return
+@app.route("/music_instrumental", methods=["GET", "POST"])
+def music_instrumental():
+    music = get_music(GENRE[0])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_classical", methods=["GET", "POST"])
+def music_classical():
+    music = get_music(GENRE[1])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_electronic", methods=["GET", "POST"])
+def music_electronic():
+    music = get_music(GENRE[2])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_latin", methods=["GET", "POST"])
+def music_latin():
+    music = get_music(GENRE[3])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_hip_hop", methods=["GET", "POST"])
+def music_hip_hop():
+    music = get_music(GENRE[4])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_country", methods=["GET", "POST"])
+def music_country():
+    music = get_music(GENRE[5])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_metal", methods=["GET", "POST"])
+def music_metal():
+    music = get_music(GENRE[6])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_reggae", methods=["GET", "POST"])
+def music_reggae():
+    music = get_music(GENRE[7])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_blues", methods=["GET", "POST"])
+def music_blues():
+    music = get_music(GENRE[8])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_folk", methods=["GET", "POST"])
+def music_folk():
+    music = get_music(GENRE[9])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_jazz", methods=["GET", "POST"])
+def music_jazz():
+    music = get_music(GENRE[10])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_pop", methods=["GET", "POST"])
+def music_pop():
+    music = get_music(GENRE[11])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_rock", methods=["GET", "POST"])
+def music_rock():
+    music = get_music(GENRE[12])
+    return render_template('music.html', music=music)
+
+
+@app.route("/music_ska", methods=["GET", "POST"])
+def music_ska():
+    music = get_music(GENRE[13])
+    return render_template('music.html', music=music)
 
 if __name__ == '__main__':
     db_session.global_init("db/users.sqlite")

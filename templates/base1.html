@@ -20,6 +20,12 @@
     background: #5da130 url(static/img/cactus_fon.jpg); /* Цвет фона и путь к файлу */
     color: #000; /* Цвет текста */
     }
+   .photo img {
+    border: 2px solid #8b8e4b; /* Параметры рамки */
+   }
+   .photo p {
+    margin: 0; /* Отступы */
+   }
     </style>
 </head>
 <body>
@@ -38,26 +44,33 @@
       </li>
       <li class="nav-item active">
         <a class="nav-link" href="bot">Кактус Манси<span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Музыка<span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false">
+              Музыка <span class="sr-only">(current)</span>
+          </a>
+          <div class="dropdown-menu">
+              <h6 class="dropdown-header">Жанр</h6>
+              <a class="dropdown-item" href="#">Инструментальная</a>
+              <a class="dropdown-item" href="#">Классическая</a>
+              <a class="dropdown-item" href="#">Электронная</a>
+              <a class="dropdown-item" href="#">Латинская</a>
+              <a class="dropdown-item" href="#">Хип-хоп</a>
+              <a class="dropdown-item" href="#">Кантри</a>
+              <a class="dropdown-item" href="#">Метал</a>
+              <a class="dropdown-item" href="#">Регги</a>
+              <a class="dropdown-item" href="#">Блюз</a>
+              <a class="dropdown-item" href="#">Фолк</a>
+              <a class="dropdown-item" href="#">Джаз</a>
+              <a class="dropdown-item" href="#">Поп</a>
+              <a class="dropdown-item" href="#">Рок</a>
+              <a class="dropdown-item" href="#">Ска</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Рандомная музычка</a>
+          </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
+        <a class="nav-link disabled" href="#">Как жизнь молодецкая?</a>
       </li>
 
     </ul>
