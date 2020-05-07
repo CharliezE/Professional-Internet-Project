@@ -15,6 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <link rel="shortcut icon" href="static/img/cactus_icon.png" type="image/png">
+    <link rel="stylesheet" type="text/css" href="static/css/style_base1.css">
     <style>
     body {
     background: #5da130 url(static/img/cactus_fon.jpg); /* Цвет фона и путь к файлу */
@@ -54,22 +55,22 @@
           </a>
           <div class="dropdown-menu">
               <h6 class="dropdown-header">Жанр</h6>
-              <a class="dropdown-item" href="#">Инструментальная</a>
-              <a class="dropdown-item" href="#">Классическая</a>
-              <a class="dropdown-item" href="#">Электронная</a>
-              <a class="dropdown-item" href="#">Латинская</a>
-              <a class="dropdown-item" href="#">Хип-хоп</a>
-              <a class="dropdown-item" href="#">Кантри</a>
-              <a class="dropdown-item" href="#">Метал</a>
-              <a class="dropdown-item" href="#">Регги</a>
-              <a class="dropdown-item" href="#">Блюз</a>
-              <a class="dropdown-item" href="#">Фолк</a>
-              <a class="dropdown-item" href="#">Джаз</a>
-              <a class="dropdown-item" href="#">Поп</a>
-              <a class="dropdown-item" href="#">Рок</a>
-              <a class="dropdown-item" href="#">Ска</a>
+              <a class="dropdown-item" href="music_instrumental">Инструментальная</a>
+              <a class="dropdown-item" href="music_classical">Классическая</a>
+              <a class="dropdown-item" href="music_electronic">Электронная</a>
+              <a class="dropdown-item" href="music_latin">Латинская</a>
+              <a class="dropdown-item" href="music_hip_hop">Хип-хоп</a>
+              <a class="dropdown-item" href="music_country">Кантри</a>
+              <a class="dropdown-item" href="music_metal">Метал</a>
+              <a class="dropdown-item" href="music_reggae">Регги</a>
+              <a class="dropdown-item" href="music_blues">Блюз</a>
+              <a class="dropdown-item" href="music_folk">Фолк</a>
+              <a class="dropdown-item" href="music_jazz">Джаз</a>
+              <a class="dropdown-item" href="music_pop">Поп</a>
+              <a class="dropdown-item" href="music_rock">Рок</a>
+              <a class="dropdown-item" href="music_ska">Ска</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Рандомная музычка</a>
+              <a class="dropdown-item" href="random_music">Рандомный жанр</a>
           </div>
       </li>
       <li class="nav-item">
@@ -81,7 +82,7 @@
 
       <h1>♥</h1>
       <div class="btn-group dropleft">
-          <button type="button" class="btn alert-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button type="button" class="btn alert-success badge-pill dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="icon"><i class="fas fa-cog fa-spin"></i></span>
           </button>
           <div class="dropdown-menu navDropdown" aria-labelledby="navbarDropdownMenuLink">
