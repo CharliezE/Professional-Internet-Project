@@ -1,6 +1,7 @@
 import requests
-from datetime import datetime
+import random
 
+from datetime import datetime
 from wtforms import FileField, SubmitField, StringField, PasswordField, BooleanField
 from flask import Flask, render_template, url_for, redirect, request
 from wtforms.validators import DataRequired
@@ -113,6 +114,7 @@ def get_music(genre):
     return all_music
 
 
+
 news = welcome()
 
 
@@ -192,14 +194,14 @@ def account():
                 break
         session.commit()
         if player.img is None:
-            return render_template('account.html', user=player, f=False, form=form, avatar=avatar_path, name=player.email.split('@')[0])
+            return render_template('account.html', user=player, f=False, form=form, avatar=avatar_path, name=player.email.split('@')[0].capitalize())
         else:
-            return render_template('account.html', user=player, f=True, form=form, name=player.email.split('@')[0])
+            return render_template('account.html', user=player, f=True, form=form, name=player.email.split('@')[0].capitalize())
     else:
         if player.img is None:
-            return render_template('account.html', user=player, f=False, form=form, name=player.email.split('@')[0])
+            return render_template('account.html', user=player, f=False, form=form, name=player.email.split('@')[0].capitalize())
         else:
-            return render_template('account.html', user=player, f=True, form=form, name=player.email.split('@')[0])
+            return render_template('account.html', user=player, f=True, form=form, name=player.email.split('@')[0].capitalize())
 
 
 @app.route('/exit', methods=['GET', 'POST'])
@@ -215,7 +217,7 @@ def bot():
     global bot_dialog
     if request.method == "GET":
         name = player.email.split('@')[0]
-        return render_template('bot.html', dlg=bot_dialog[::-1], name=name)
+        return render_template('bot.html', dlg=bot_dialog[::-1], name=name.capitalize())
     elif request.method == "POST":
         try:
             t = str(datetime.today()).split()
@@ -225,7 +227,7 @@ def bot():
             name = player.email.split('@')[0]
             bot_dialog.append((True, ask, time))
             bot_dialog.append((False, answer, time))
-            return render_template('bot.html', dlg=bot_dialog[::-1], name=name, time=time)
+            return render_template('bot.html', dlg=bot_dialog[::-1], name=name.capitalize(), time=time)
         except Exception as e:
             print(e)
     return render_template('bot.html', answer="")
@@ -313,6 +315,13 @@ def music_rock():
 def music_ska():
     music = get_music(GENRE[13])
     return render_template('music.html', music=music)
+
+
+@app.route("/random_music", methods=["GET", "POST"])
+def random_music():
+    music = get_music(random.choice(GENRE))
+    return render_template('music.html', music=music)
+
 
 if __name__ == '__main__':
     db_session.global_init("db/users.sqlite")
