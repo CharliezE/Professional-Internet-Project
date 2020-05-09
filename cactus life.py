@@ -212,6 +212,11 @@ def exit():
     return render_template('welcome_page.html', news=news)
 
 
+@app.route('/help', methods=['GET', 'POST'])
+def help():
+    return render_template('help.html')
+
+
 @app.route("/bot", methods=["GET", "POST"])
 def bot():
     global bot_dialog
