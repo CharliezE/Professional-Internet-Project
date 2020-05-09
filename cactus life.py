@@ -8,7 +8,7 @@ from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
 from bs4 import BeautifulSoup
 
-from bot import ask_bot, translate_bot
+from bot import UserMessage
 
 from config import API_KEY_NEWS, YANDEX_API, MY_KEY, MUSIC_KEY
 from data import db_session
@@ -17,11 +17,12 @@ from data.users import User
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
-GENRE = ['Instrumental', 'Classical', 'Electronic', 'Latin', 'Hip hop', 'Country', 'Metal', 'Reggae', 'Blues', 'Folk', 'Jazz', 'Pop', 'Rock', 'Ska']
+GENRE = ['Instrumental', 'Classical', 'Electronic', 'Latin', 'Hip hop', 'Country',
+         'Metal', 'Reggae', 'Blues', 'Folk', 'Jazz', 'Pop', 'Rock', 'Ska']
 
 player = None
 bot_dialog = []
-
+bot_message = UserMessage()
 
 
 class AvatarForm(FlaskForm):
@@ -46,17 +47,6 @@ def get_text(url):
         return 'No'
 
 
-def translation(text):
-    try:
-        url = 'https://translate.yandex.net/api/v1.5/tr.json/translate?'
-        key = MY_KEY
-        lang = 'ru'
-        r = requests.post(url, data={'key': key, 'text': text, 'lang': lang}).json()
-        return r['text'][0]
-    except Exception:
-        return 'No'
-
-
 def check(e, p):
     em = e.split('@')[1]
     if e.count('@') == 1 and len(em[0]) > 0 and em.count('.') == 1:
@@ -69,7 +59,8 @@ def check(e, p):
 
 def welcome():
     url_new = f'http://newsapi.org/v2/top-headlines?country=us&category=business&apiKey={API_KEY_NEWS}'
-    url_new_1 = f'http://newsapi.org/v2/everything?q=apple&from=2020-04-23&to=2020-04-25&sortBy=popularity&apiKe={API_KEY_NEWS}'
+    url_new_1 = f'http://newsapi.org/v2/everything?q=apple&from=' \
+                f'2020-04-23&to=2020-04-25&sortBy=popularity&apiKe={API_KEY_NEWS}'
     response = requests.get(url_new)
     response_1 = requests.get(url_new_1)
     if response and response_1:
@@ -99,7 +90,8 @@ def welcome():
 
 
 def get_music(genre):
-    url_new = f'https://api.jamendo.com/v3.0/playlists/tracks/?client_id={MUSIC_KEY}&format=jsonpretty&limit=50&name={genre}&track_type=albumtrack'
+    url_new = f'https://api.jamendo.com/v3.0/playlists/tracks/?client_id={MUSIC_KEY}' \
+              f'&format=jsonpretty&limit=50&name={genre}&track_type=albumtrack'
     response = requests.get(url_new)
     all_music = []
     if response:
@@ -112,7 +104,6 @@ def get_music(genre):
                 song = y['audio'].replace('\/', '/')
                 all_music.append((artist, title, img, song))
     return all_music
-
 
 
 news = welcome()
@@ -194,14 +185,18 @@ def account():
                 break
         session.commit()
         if player.img is None:
-            return render_template('account.html', user=player, f=False, form=form, avatar=avatar_path, name=player.email.split('@')[0].capitalize())
+            return render_template('account.html', user=player, f=False, form=form,
+                                   avatar=avatar_path, name=player.email.split('@')[0].capitalize())
         else:
-            return render_template('account.html', user=player, f=True, form=form, name=player.email.split('@')[0].capitalize())
+            return render_template('account.html', user=player, f=True, form=form,
+                                   name=player.email.split('@')[0].capitalize())
     else:
         if player.img is None:
-            return render_template('account.html', user=player, f=False, form=form, name=player.email.split('@')[0].capitalize())
+            return render_template('account.html', user=player, f=False, form=form,
+                                   name=player.email.split('@')[0].capitalize())
         else:
-            return render_template('account.html', user=player, f=True, form=form, name=player.email.split('@')[0].capitalize())
+            return render_template('account.html', user=player, f=True, form=form,
+                                   name=player.email.split('@')[0].capitalize())
 
 
 @app.route('/exit', methods=['GET', 'POST'])
@@ -223,7 +218,7 @@ def bot():
             t = str(datetime.today()).split()
             time = t[1][:-10] + ' ' + '.'.join(t[0].split('-')[::-1])
             ask = request.form['ask']
-            answer = ask_bot(ask)
+            answer = bot_message.ask_bot(ask)
             name = player.email.split('@')[0]
             bot_dialog.append((True, ask, time))
             bot_dialog.append((False, answer, time))
