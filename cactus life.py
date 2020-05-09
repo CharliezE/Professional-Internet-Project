@@ -47,6 +47,17 @@ def get_text(url):
         return 'No'
 
 
+def translation(text):
+    try:
+        url = 'https://translate.yandex.net/api/v1.5/tr.json/translate?'
+        key = MY_KEY
+        lang = 'ru'
+        r = requests.post(url, data={'key': key, 'text': text, 'lang': lang}).json()
+        return r['text'][0]
+    except Exception:
+        return 'No'
+
+
 def check(e, p):
     em = e.split('@')[1]
     if e.count('@') == 1 and len(em[0]) > 0 and em.count('.') == 1:
