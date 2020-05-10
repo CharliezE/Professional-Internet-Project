@@ -3,7 +3,7 @@ import random
 import pickle
 
 from datetime import datetime
-from wtforms import FileField, SubmitField, StringField, PasswordField, BooleanField
+from wtforms import FileField, SubmitField
 from flask import Flask, render_template, url_for, redirect, request
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
@@ -24,8 +24,8 @@ GENRE = ['Instrumental', 'Classical', 'Electronic', 'Latin', 'Hip hop', 'Country
 player = None
 bot_dialog = []
 bot_message = UserMessage()
-dialog = []
-users_dialog ={}
+dialog = None
+buddy = None
 
 
 
@@ -50,6 +50,7 @@ def translation(text):
         key = MY_KEY
         lang = 'ru'
         r = requests.post(url, data={'key': key, 'text': text, 'lang': lang}).json()
+        print(r)
         return r['text'][0]
     except Exception:
         return 'No'
@@ -66,20 +67,19 @@ def check(e, p):
 
 
 def welcome():
-    url_new = f'http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey={API_KEY_NEWS}'
+    url_new = f'http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKe ={API_KEY_NEWS}'
     response = requests.get(url_new)
     if response:
         json_response = response.json()
         news = []
         for i in range(len(json_response["articles"])):
-            if i < len(json_response["articles"]):
-                title = json_response["articles"][i]["title"]
-                url = json_response["articles"][i]["url"]
-                text = get_text(url)
-                if text != 'No' and text.count('.') > 2:
-                    text = translation(text)
-                    if text != 'No':
-                        news.append((translation(title), text))
+            title = json_response["articles"][i]["title"]
+            url = json_response["articles"][i]["url"]
+            text = get_text(url)
+            if text != 'No' and text.count('.') > 2:
+                text = translation(text)
+                if text != 'No':
+                    news.append((translation(title), text))
         return news
     else:
         return [("Ошибка выполнения запроса", "упс")]
@@ -113,6 +113,8 @@ def index():
 
 @app.route('/indexing')
 def indexing():
+    global buddy
+    buddy = None
     return render_template('welcome_page_2.html', news=news)
 
 
@@ -168,7 +170,8 @@ def sign_in():
 
 @app.route('/account', methods=['GET', 'POST'])
 def account():
-    global player
+    global player, buddy
+    buddy = None
     form = AvatarForm()
     name = player.email.split('@')[0]
     if form.validate_on_submit():
@@ -194,9 +197,13 @@ def account():
 
 @app.route('/exit', methods=['GET', 'POST'])
 def exit():
-    global player, bot_dialog
+    global player, bot_dialog, dialog, buddy
     player = None
     bot_dialog = []
+    with open('dialogs.pickle', 'wb') as f:
+        pickle.dump(dialog, f)
+    buddy = None
+    dialog = None
     return render_template('welcome_page.html', news=news)
 
 
@@ -207,7 +214,8 @@ def help():
 
 @app.route("/bot", methods=["GET", "POST"])
 def bot():
-    global bot_dialog
+    global bot_dialog, buddy
+    buddy = None
     if request.method == "GET":
         name = player.email.split('@')[0]
         return render_template('bot.html', dlg=bot_dialog[::-1], name=name.capitalize())
@@ -228,6 +236,8 @@ def bot():
 
 @app.route("/translate", methods=["GET", "POST"])
 def translate():
+    global buddy
+    buddy = None
     try:
         if request.method == "GET":
             return render_template('translator.html', answer_translate="Ну, давай! Введи текст!",
@@ -251,9 +261,91 @@ def translate():
                            time="Нет время.")
 
 
-@app.route("/dialog", methods=["GET", "POST"])
-def dialog():
-    return render_template('dialog.html')
+@app.route("/dialog_go", methods=["GET", "POST"])
+def dialog_go():
+    global dialog, buddy
+    name = player.email
+    if dialog is None:
+        with open('dialogs.pickle', 'rb') as f:
+            dialog = pickle.load(f)
+    if request.method == "GET":
+        session = db_session.create_session()
+        users = [user.email for user in session.query(User) if user.email != name]
+        session.commit()
+        if buddy is None:
+            if name not in dialog:
+                if len(users) != 0:
+                    buddy = random.choice(users)
+                    dialog[name] = {'friends': [buddy]}
+                    dialog[name][buddy] = []
+                    dialog[buddy] = {'friends': [name]}
+                    dialog[buddy][name] = []
+                    return render_template('dialog.html', have=True, go=False,
+                                           friend=str(buddy.split('@')[0].capitalize()))
+                return render_template('dialog.html', have=False)
+            else:
+                if len(users) != 0:
+                    have_dialog = dialog[name]['friends']
+                    for x in have_dialog:
+                        i = users.index(x)
+                        del users[i]
+                    if len(users) == 0:
+                        return render_template('dialog.html', have=False)
+                    else:
+                        buddy = random.choice(users)
+                        dialog[name]['friends'].append(buddy)
+                        dialog[name][buddy] = []
+                        if buddy in dialog:
+                            dialog[buddy]['friends'].append(name)
+                            dialog[buddy][name] = []
+                        else:
+                            dialog[buddy] = {'friends': [name]}
+                            dialog[buddy][name] = []
+                        return render_template('dialog.html', have=True, go=False,
+                                               friend=str(buddy.split('@')[0].capitalize()))
+        return render_template('dialog.html', have=True, go=True, dialog=dialog[name][buddy],
+                               friend=str(buddy.split('@')[0].capitalize()))
+    elif request.method == "POST":
+        ask = request.form['ask']
+        t = str(datetime.today()).split()
+        time = t[1][:-10] + ' ' + '.'.join(t[0].split('-')[::-1])
+        dialog[name][buddy].append((str(name.split('@')[0].capitalize()), ask, time))
+        dialog[buddy][name].append((str(name.split('@')[0].capitalize()), ask, time))
+        return render_template('dialog.html', have=True, go=True, name=str(name.split('@')[0].capitalize()),
+                               dialog=dialog[name][buddy], friend=str(buddy.split('@')[0].capitalize()))
+
+
+@app.route("/have_dialog", methods=["GET", "POST"])
+def have_dialog():
+    global dialog, buddy
+    buddy = None
+    name = player.email
+    if dialog is None:
+        with open('dialogs.pickle', 'rb') as f:
+            dialog = pickle.load(f)
+    session = db_session.create_session()
+    users = [user for user in session.query(User) if user.email != name]
+    session.commit()
+    friends = dialog[name]['friends']
+    fr = []
+    for f in friends:
+        for u in users:
+            if f == u.email:
+                fr.append((f.split('@')[0].capitalize(), u.img, f))
+    return render_template('have_dialog.html', friends=fr, name=str(name.split('@')[0].capitalize()))
+
+
+@app.route("/now_dialog", methods=["GET", "POST"])
+def now_dialog():
+    global dialog, buddy
+    buddy = request.form['name']
+    name = player.email
+    if dialog is None:
+        with open('dialogs.pickle', 'rb') as f:
+            dialog = pickle.load(f)
+    return render_template('dialog.html', have=True, go=True, name=str(name.split('@')[0].capitalize()),
+                           dialog=dialog[name][buddy], friend=str(buddy.split('@')[0].capitalize()))
+
 
 
 @app.route("/music_instrumental", methods=["GET", "POST"])

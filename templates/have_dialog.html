@@ -1,0 +1,32 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<div class="jumbotron hoverable p-4" style="background-color: #5ad65a;">
+    <div class="container">
+        <h1 class="display-4" align="center">Переписки с {{ name }}</h1>
+    </div>
+</div>
+<div class="alert alert-success text-body" role="alert">
+    {% for fr in friends %}
+        <table>
+            <tr>
+                <td>
+                    <div class="photo">
+                        <img src="{{ fr[1] }}" class="rounded-circle" alt="Cinque Terre" width="80" height="80">
+                    </div>
+                </td>
+                <td>
+                    <pre><h3 class="ribbon"><strong>   {{ fr[0] }}   </strong></h3></pre>
+                </td>
+                <td>
+                    <form action="/now_dialog" method="post">
+                        <input type="hidden" name = "name" value="{{ fr[2] }}">
+                        <button type="submit" class="btn btn-outline-success" h>Переписка</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+        <hr size=3px width=500px align="left">
+    {% endfor %}
+</div>
+{% endblock %}

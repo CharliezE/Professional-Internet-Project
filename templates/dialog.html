@@ -1,0 +1,75 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<a id="top"></a>
+<div class="jumbotron hoverable p-4" style="background-color: #5ad65a;">
+    <div class="container">
+        <h1 class="display-4" align="center">Диалог с {{ friend }}</h1>
+    </div>
+</div>
+{% if have %}
+    {% if go %}
+        <div class="alert alert-success text-body" style="margin: 5px 30px 150px 30px;" role="alert">
+            {% for msg in dialog %}
+                {% if name==msg[0] %}
+                    <div class="container" align="right">
+                        <div class="card col-md-6 col-md-offset-3" style="background-color: #5ad65a;" align="right">
+                            <div class="card-header">
+                                {{ msg[0] }}
+                            </div>
+                            <div class="card-body">
+                                <blockquote class="blockquote mb-0">
+                                    <p>{{ msg[1] }}</p>
+                                    <footer class="blockquote-footer">{{ msg[2] }}</footer>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="card col-md-6 col-md-offset-3" align="left">
+                        <div class="card-header">
+                            {{ msg[0] }}
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>{{ msg[1] }}</p>
+                                <footer class="blockquote-footer">{{ msg[2] }}</footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-success text-body" role="alert" align="center">
+            <h1>Начните диалог</h1>
+        </div>
+    {% endif %}
+        <div id="x">
+            <div class="alert alert-danger" role="alert">
+                <form action="/dialog_go" method="post">
+                    <div class="form-group row" align="center">
+                        <label for="ask" class="col-sm-2 col-form-label">Текст сообщения:</label>
+                        <div class="col-sm-9">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="ask"
+                                       placeholder="Можешь написать что-нибудь"
+                                       name="ask">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-outline-success">Отправить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+{% else %}
+    <div class="alert alert-danger" role="alert" align="center">
+        <h1>Пользователей нет!</h1>
+    </div>
+{% endif %}
+<a id="bottom"></a>
+<a type="button" class="btn btn-success" href="#top" style="position: fixed; top: 510px; left: 1300px"><i class="fas fa-arrow-up"></i></a>
+<a type="button" class="btn btn-success" href="#bottom" style="position: fixed; top: 550px; left: 1300px"><i class="fas fa-arrow-down"></i></a>
+{% endblock %}
