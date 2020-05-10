@@ -40,7 +40,7 @@ class UserMessage:
             answers = self.data[num]["answers"]
             right = self.data[num]["right"]
 
-            if "игра" or "game" in message:
+            if "игра" in message.lower() or "game" in message.lower():
                 self.game_flag = True
                 answer = f"{ask}" \
                          f"{' '.join(answers)}"
@@ -48,6 +48,7 @@ class UserMessage:
             else:
                 if self.pred_right == message:
                     answer = f"That's the right answer! {ask} {' '.join(answers)}"
+                    self.score += 1
                 else:
                     answer = f"That's the wrong answer! {ask} {' '.join(answers)}"
                 self.pred_right = right
@@ -55,6 +56,7 @@ class UserMessage:
         else:
             if self.pred_right == message:
                 answer = "That's the right answer!"
+                self.score += 1
             else:
                 answer = "That's the wrong answer!"
             answer += f"Your score is {self.score}/5"

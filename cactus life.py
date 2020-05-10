@@ -28,7 +28,6 @@ dialog = []
 users_dialog ={}
 
 
-
 class AvatarForm(FlaskForm):
     file = FileField("Файл", validators=[DataRequired()])
     submit = SubmitField("Загрузить")
