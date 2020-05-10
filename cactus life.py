@@ -28,7 +28,6 @@ dialog = None
 buddy = None
 
 
-
 class AvatarForm(FlaskForm):
     file = FileField("Файл", validators=[DataRequired()])
     submit = SubmitField("Загрузить")
