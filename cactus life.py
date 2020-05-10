@@ -1,5 +1,6 @@
 import requests
 import random
+import pickle
 
 from datetime import datetime
 from wtforms import FileField, SubmitField, StringField, PasswordField, BooleanField
@@ -230,7 +231,7 @@ def translate():
     try:
         if request.method == "GET":
             return render_template('translator.html', answer_translate="Ну, давай! Введи текст!",
-                                   time="Нет пока время.")
+                                   time="Нет время.")
         elif request.method == "POST":
             try:
                 ask = request.form['ask']
@@ -244,10 +245,15 @@ def translate():
                     return render_template('translator.html', answer_translate=answer, time=time)
             except Exception as e:
                 print(e)
-                return
     except Exception as e:
         print(e)
-        return
+    return render_template('translator.html', answer_translate="Ну, давай! Введи текст!",
+                           time="Нет время.")
+
+
+@app.route("/dialog", methods=["GET", "POST"])
+def dialog():
+    return render_template('dialog.html')
 
 
 @app.route("/music_instrumental", methods=["GET", "POST"])
@@ -338,21 +344,6 @@ def music_ska():
 def random_music():
     music = get_music(random.choice(GENRE))
     return render_template('music.html', music=music)
-
-
-@app.route("/new_dialog", methods=["GET", "POST"])
-def new_dialog():
-    global player
-    name = player.email.split('@')[0]
-    session = db_session.create_session()
-    all_users = [user.email for user in session.query(User)]
-    session.commit()
-    mail = random.choice(all_users)
-    if name not in users_dialog:
-        users_dialog[name] = {[mail]}
-    with open('easy.pickle', 'wb') as f:
-        pickle.dump((eblack, enumbers), f)
-    return render_template('new_dialog.html')
 
 
 if __name__ == '__main__':
