@@ -332,7 +332,7 @@ def random_music():
     return render_template('music.html', music=music)
 
 
-@app.route("/dialog_tet_a_tet", methods=["GET", "POST"])
+@app.route("/new_dialog", methods=["GET", "POST"])
 def new_dialog():
     global player
     name = player.email.split('@')[0]
