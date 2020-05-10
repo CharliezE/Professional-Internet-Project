@@ -65,7 +65,7 @@ def check(e, p):
 
 
 def welcome():
-    url_new = f'http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKe={API_KEY_NEWS}'
+    url_new = f'http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey={API_KEY_NEWS}'
     response = requests.get(url_new)
     if response:
         json_response = response.json()
