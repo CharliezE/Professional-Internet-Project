@@ -1,5 +1,3 @@
-import pickle
-
 import requests
 import random
 
@@ -10,7 +8,7 @@ from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
 from bs4 import BeautifulSoup
 
-from bot import ask_bot, translate_bot
+from bot import UserMessage
 
 from config import API_KEY_NEWS, YANDEX_API, MY_KEY, MUSIC_KEY
 from data import db_session
@@ -19,10 +17,12 @@ from data.users import User
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
-GENRE = ['Instrumental', 'Classical', 'Electronic', 'Latin', 'Hip hop', 'Country', 'Metal', 'Reggae', 'Blues', 'Folk', 'Jazz', 'Pop', 'Rock', 'Ska']
+GENRE = ['Instrumental', 'Classical', 'Electronic', 'Latin', 'Hip hop', 'Country',
+         'Metal', 'Reggae', 'Blues', 'Folk', 'Jazz', 'Pop', 'Rock', 'Ska']
 
 player = None
 bot_dialog = []
+bot_message = UserMessage()
 dialog = []
 users_dialog ={}
 
@@ -85,7 +85,8 @@ def welcome():
 
 
 def get_music(genre):
-    url_new = f'https://api.jamendo.com/v3.0/playlists/tracks/?client_id={MUSIC_KEY}&format=jsonpretty&limit=50&name={genre}&track_type=albumtrack'
+    url_new = f'https://api.jamendo.com/v3.0/playlists/tracks/?client_id={MUSIC_KEY}' \
+              f'&format=jsonpretty&limit=50&name={genre}&track_type=albumtrack'
     response = requests.get(url_new)
     all_music = []
     if response:
@@ -98,7 +99,6 @@ def get_music(genre):
                 song = y['audio'].replace('\/', '/')
                 all_music.append((artist, title, img, song))
     return all_music
-
 
 
 news = welcome()
@@ -215,7 +215,7 @@ def bot():
             t = str(datetime.today()).split()
             time = t[1][:-10] + ' ' + '.'.join(t[0].split('-')[::-1])
             ask = request.form['ask']
-            answer = ask_bot(ask)
+            answer = bot_message.ask_bot(ask)
             name = player.email.split('@')[0]
             bot_dialog.append((True, ask, time))
             bot_dialog.append((False, answer, time))
