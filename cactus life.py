@@ -65,7 +65,7 @@ def check(e, p):
 
 
 def welcome():
-    url_new = f'http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey={API_KEY_NEWS}'
+    url_new = f'http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKe={API_KEY_NEWS}'
     response = requests.get(url_new)
     if response:
         json_response = response.json()
@@ -266,6 +266,7 @@ def dialog_go():
     if dialog is None:
         with open('dialogs.pickle', 'rb') as f:
             dialog = pickle.load(f)
+            print(dialog)
     if request.method == "GET":
         session = db_session.create_session()
         users = [user.email for user in session.query(User) if user.email != name]
