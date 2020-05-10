@@ -65,7 +65,7 @@ def check(e, p):
 
 
 def welcome():
-    url_new = f'http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey={API_KEY_NEWS}'
+    url_new = f'http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKe={API_KEY_NEWS}'
     response = requests.get(url_new)
     if response:
         json_response = response.json()
@@ -228,7 +228,7 @@ def bot():
 @app.route("/translate", methods=["GET", "POST"])
 def translate():
     if request.method == "GET":
-        return render_template('translator.html', answer_translate=" ")
+        return render_template('translator.html', answer_translate="Ну, давай! Введи текст!", time="Нет пока время.")
     elif request.method == "POST":
         try:
             ask = request.form['ask']
@@ -236,8 +236,10 @@ def translate():
             lang2 = request.form['lang1']
             lang = f"{lang1}-{lang2}"
             if ask:
-                answer = translate_bot(ask, lang)
-                return render_template('translator.html', answer_translate=answer)
+                answer = bot_message.translate_bot(ask, lang)
+                t = str(datetime.today()).split()
+                time = t[1][:-10] + ' ' + '.'.join(t[0].split('-')[::-1])
+                return render_template('translator.html', answer_translate=answer, time=time)
         except Exception as e:
             print(e)
 

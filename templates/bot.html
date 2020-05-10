@@ -15,8 +15,8 @@
                     <div class="col-sm-10">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" id="ask"
-                               placeholder="Пообщаемся?"
-                               name="ask">
+                                   placeholder="Пообщаемся?"
+                                   name="ask">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-outline-success">Отправить</button>
                             </div>
@@ -27,12 +27,25 @@
         </div>
     </div>
 
-{% for user in dlg %}
-{% if user[0] %}
-<div class="container" align="right">
-    <div class="card col-md-6 col-md-offset-3" align="right">
+    {% for user in dlg %}
+    {% if user[0] %}
+    <div class="container" align="right">
+        <div class="card col-md-6 col-md-offset-3" align="right">
+            <div class="card-header">
+                {{ name }}
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>{{ user[1] }}</p>
+                    <footer class="blockquote-footer">{{ user[2] }}</footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="card col-md-6 col-md-offset-3" style="background-color: #5ad65a;" align="left">
         <div class="card-header">
-            {{ name }}
+            Кактус Манси
         </div>
         <div class="card-body">
             <blockquote class="blockquote mb-0">
@@ -41,21 +54,8 @@
             </blockquote>
         </div>
     </div>
-</div>
-{% else %}
-<div class="card col-md-6 col-md-offset-3" style="background-color: #5ad65a;" align="left">
-    <div class="card-header">
-        Кактус Манси
-    </div>
-    <div class="card-body">
-        <blockquote class="blockquote mb-0">
-            <p>{{ user[1] }}</p>
-            <footer class="blockquote-footer">{{ user[2] }}</footer>
-        </blockquote>
-    </div>
-</div>
 
-{% endif %}
-{% endfor %}
+    {% endif %}
+    {% endfor %}
 </div>
 {% endblock %}
