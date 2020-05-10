@@ -227,21 +227,27 @@ def bot():
 
 @app.route("/translate", methods=["GET", "POST"])
 def translate():
-    if request.method == "GET":
-        return render_template('translator.html', answer_translate="Ну, давай! Введи текст!", time="Нет пока время.")
-    elif request.method == "POST":
-        try:
-            ask = request.form['ask']
-            lang1 = request.form['lang']
-            lang2 = request.form['lang1']
-            lang = f"{lang1}-{lang2}"
-            if ask:
-                answer = bot_message.translate_bot(ask, lang)
-                t = str(datetime.today()).split()
-                time = t[1][:-10] + ' ' + '.'.join(t[0].split('-')[::-1])
-                return render_template('translator.html', answer_translate=answer, time=time)
-        except Exception as e:
-            print(e)
+    try:
+        if request.method == "GET":
+            return render_template('translator.html', answer_translate="Ну, давай! Введи текст!",
+                                   time="Нет пока время.")
+        elif request.method == "POST":
+            try:
+                ask = request.form['ask']
+                lang1 = request.form['lang']
+                lang2 = request.form['lang1']
+                lang = f"{lang1}-{lang2}"
+                if ask:
+                    answer = bot_message.translate_bot(ask, lang)
+                    t = str(datetime.today()).split()
+                    time = t[1][:-10] + ' ' + '.'.join(t[0].split('-')[::-1])
+                    return render_template('translator.html', answer_translate=answer, time=time)
+            except Exception as e:
+                print(e)
+                return
+    except Exception as e:
+        print(e)
+        return
 
 
 @app.route("/music_instrumental", methods=["GET", "POST"])
