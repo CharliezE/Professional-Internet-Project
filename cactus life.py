@@ -347,7 +347,6 @@ def now_dialog():
                            dialog=dialog[name][buddy], friend=str(buddy.split('@')[0].capitalize()))
 
 
-
 @app.route("/music_instrumental", methods=["GET", "POST"])
 def music_instrumental():
     music = get_music(GENRE[0])

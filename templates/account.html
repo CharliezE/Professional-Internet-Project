@@ -18,6 +18,14 @@
             </td>
             <td>
                 <pre><h1 class="ribbon"><font face="comic sans ms" size="+4" color="#FF002E"><i>          Имя:</i><strong> {{ name }}</strong></font></h1></pre>
+                <div class="alert alert-danger" role="alert" align="center" style="width: 14rem;">
+                    <form action="" method="post" enctype="multipart/form-data" novalidate>
+                        <h6>Сменить аватарку</h6>
+                        {{ form.csrf_token }}
+                        <p>{{ form.file(type="file", class="form-control-file") }} </p>
+                        <p>{{ form.submit(type="submit", class="btn btn-success") }}</p>
+                    </form>
+                </div>
             </td>
         </tr>
     </table>
