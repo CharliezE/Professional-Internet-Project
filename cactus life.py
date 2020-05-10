@@ -23,18 +23,14 @@ GENRE = ['Instrumental', 'Classical', 'Electronic', 'Latin', 'Hip hop', 'Country
 player = None
 bot_dialog = []
 bot_message = UserMessage()
+dialog = []
+users_dialog ={}
+
 
 
 class AvatarForm(FlaskForm):
     file = FileField("Файл", validators=[DataRequired()])
     submit = SubmitField("Загрузить")
-
-
-class LoginForm(FlaskForm):
-    username = StringField('Логин', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    remember_me = BooleanField('Запомнить меня')
-    submit = SubmitField('sign up')
 
 
 def get_text(url):
@@ -69,27 +65,15 @@ def check(e, p):
 
 
 def welcome():
-    url_new = f'http://newsapi.org/v2/top-headlines?country=us&category=business&apiKey={API_KEY_NEWS}'
-    url_new_1 = f'http://newsapi.org/v2/everything?q=apple&from=' \
-                f'2020-04-23&to=2020-04-25&sortBy=popularity&apiKe={API_KEY_NEWS}'
+    url_new = f'http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey={API_KEY_NEWS}'
     response = requests.get(url_new)
-    response_1 = requests.get(url_new_1)
-    if response and response_1:
+    if response:
         json_response = response.json()
-        json_response_1 = response_1.json()
         news = []
-        for i in range(max(len(json_response["articles"]), len(json_response_1["articles"]))):
+        for i in range(len(json_response["articles"])):
             if i < len(json_response["articles"]):
                 title = json_response["articles"][i]["title"]
                 url = json_response["articles"][i]["url"]
-                text = get_text(url)
-                if text != 'No' and text.count('.') > 2:
-                    text = translation(text)
-                    if text != 'No':
-                        news.append((translation(title), text))
-            if i < len(json_response_1["articles"]):
-                title = json_response_1["articles"][i]["title"]
-                url = json_response_1["articles"][i]["url"]
                 text = get_text(url)
                 if text != 'No' and text.count('.') > 2:
                     text = translation(text)
@@ -185,6 +169,7 @@ def sign_in():
 def account():
     global player
     form = AvatarForm()
+    name = player.email.split('@')[0]
     if form.validate_on_submit():
         avatar_path = f'static/img/ava_{form.file.data.filename}'
         form.file.data.save(avatar_path)
@@ -196,18 +181,14 @@ def account():
                 break
         session.commit()
         if player.img is None:
-            return render_template('account.html', user=player, f=False, form=form,
-                                   avatar=avatar_path, name=player.email.split('@')[0].capitalize())
+            return render_template('account.html', user=player, f=False, form=form, avatar=avatar_path, name=name.capitalize())
         else:
-            return render_template('account.html', user=player, f=True, form=form,
-                                   name=player.email.split('@')[0].capitalize())
+            return render_template('account.html', user=player, f=True, form=form, name=name.capitalize())
     else:
         if player.img is None:
-            return render_template('account.html', user=player, f=False, form=form,
-                                   name=player.email.split('@')[0].capitalize())
+            return render_template('account.html', user=player, f=False, form=form, name=name.capitalize())
         else:
-            return render_template('account.html', user=player, f=True, form=form,
-                                   name=player.email.split('@')[0].capitalize())
+            return render_template('account.html', user=player, f=True, form=form, name=name.capitalize())
 
 
 @app.route('/exit', methods=['GET', 'POST'])
@@ -216,6 +197,11 @@ def exit():
     player = None
     bot_dialog = []
     return render_template('welcome_page.html', news=news)
+
+
+@app.route('/help', methods=['GET', 'POST'])
+def help():
+    return render_template('help.html')
 
 
 @app.route("/bot", methods=["GET", "POST"])
@@ -349,6 +335,21 @@ def music_ska():
 def random_music():
     music = get_music(random.choice(GENRE))
     return render_template('music.html', music=music)
+
+
+@app.route("/new_dialog", methods=["GET", "POST"])
+def new_dialog():
+    global player
+    name = player.email.split('@')[0]
+    session = db_session.create_session()
+    all_users = [user.email for user in session.query(User)]
+    session.commit()
+    mail = random.choice(all_users)
+    if name not in users_dialog:
+        users_dialog[name] = {[mail]}
+    with open('easy.pickle', 'wb') as f:
+        pickle.dump((eblack, enumbers), f)
+    return render_template('new_dialog.html')
 
 
 if __name__ == '__main__':
